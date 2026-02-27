@@ -1,4 +1,5 @@
 import type { ComponentType } from "react";
+import MixUpGame from "@/games/alchemy/MixUpGame";
 import RocketPopGame from "@/games/rocket-pop";
 
 export type GameDefinition = {
@@ -12,6 +13,15 @@ export type GameDefinition = {
 };
 
 export const games: GameDefinition[] = [
+  {
+    slug: "alchemy",
+    title: "Aheli Alchemy",
+    description: "Learn by mixing elements to discover metals, gems, and magical creations.",
+    emoji: "🧪",
+    accentFrom: "#4c1d95",
+    accentTo: "#a855f7",
+    component: MixUpGame
+  },
   {
     slug: "rocket-pop",
     title: "Rocket Pop",
