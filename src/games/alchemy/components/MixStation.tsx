@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { EMOJI_BY_ELEMENT, normalizeElementName } from "@/games/alchemy/data";
-import { DndContext, DragOverlay, MouseSensor, TouchSensor, rectIntersection, type DragEndEvent, useDroppable, useSensor, useSensors } from "@dnd-kit/core";
 import ElementPalette from "@/games/alchemy/components/ElementPalette";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
@@ -21,15 +20,7 @@ type MixStationProps = {
 };
 
 export default function MixStation({ discovered, slots, lastResult, onSlotSet, onSlotClear, onMix }: MixStationProps) {
-  const [activeElement, setActiveElement] = useState<string | null>(null);
   const [isMixing, setIsMixing] = useState(false);
-
-  const sensors = useSensors(
-    useSensor(MouseSensor, { activationConstraint: { distance: 4 } }),
-    useSensor(TouchSensor, { activationConstraint: { delay: 120, tolerance: 8 } })
-  );
-
-  const { setNodeRef: setTrayNodeRef, isOver } = useDroppable({ id: "mix-tray" });
 
   function placeInFirstEmptySlot(element: string) {
     const firstEmpty = slots.findIndex(slot => !slot);
@@ -38,14 +29,6 @@ export default function MixStation({ discovered, slots, lastResult, onSlotSet, o
       return;
     }
     onSlotSet(firstEmpty, element);
-  }
-
-  function handleDragEnd(event: DragEndEvent) {
-    const element = event.active.data.current?.element as string | undefined;
-    setActiveElement(null);
-    if (!element || !event.over) return;
-    if (String(event.over.id) !== "mix-tray") return;
-    placeInFirstEmptySlot(element);
   }
 
   async function handleMixClick() {
@@ -63,29 +46,18 @@ export default function MixStation({ discovered, slots, lastResult, onSlotSet, o
     .filter(entry => Boolean(entry.item)) as Array<{ item: string; slotIndex: number }>;
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={rectIntersection}
-      onDragStart={(event) => {
-        const element = event.active.data.current?.element as string | undefined;
-        setActiveElement(element ?? null);
-      }}
-      onDragEnd={handleDragEnd}
-      onDragCancel={() => setActiveElement(null)}
-    >
+    <>
       <section className="space-y-3 rounded-lg border border-zinc-300 bg-white p-3">
         <p className="text-xs font-semibold uppercase tracking-[0.14em] text-violet-900">Mix Station</p>
 
         <div
-          ref={setTrayNodeRef}
           className={cn(
-            "relative min-h-20 rounded-lg border border-dashed bg-violet-50/50 px-3 py-2 transition",
-            isOver ? "border-violet-500 bg-violet-100/70" : "border-violet-300"
+            "relative min-h-20 rounded-lg border border-dashed border-violet-300 bg-violet-50/50 px-3 py-2 transition"
           )}
         >
           {selected.length === 0 && (
             <div className="flex h-full min-h-14 items-center justify-center text-xs font-semibold uppercase tracking-[0.14em] text-zinc-500">
-              Tap or drag elements here
+              Tap elements to add here
             </div>
           )}
 
@@ -145,14 +117,6 @@ export default function MixStation({ discovered, slots, lastResult, onSlotSet, o
       </section>
 
       <ElementPalette discovered={discovered} onSelect={placeInFirstEmptySlot} />
-
-      <DragOverlay>
-        {activeElement ? (
-          <div className="rounded-full border border-violet-300 bg-white px-3 py-1 text-sm font-medium text-zinc-800 shadow">
-            {activeElement}
-          </div>
-        ) : null}
-      </DragOverlay>
-    </DndContext>
+    </>
   );
 }

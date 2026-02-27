@@ -13,7 +13,6 @@ export default function ElementPalette({ discovered, onSelect }: ElementPaletteP
         {discovered.map(element => (
           <ElementChip
             key={element}
-            chipId={`element-${element.toLowerCase().replaceAll(" ", "-")}`}
             element={element}
             onSelect={onSelect}
           />

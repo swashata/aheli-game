@@ -99,7 +99,7 @@ export const useMixUpStore = create<MixUpState & MixUpActions>((set) => ({
         const bonusBursts = Math.max(0, Math.floor(totalPoints / 10) - Math.floor(previousPoints / 10));
 
         if (isNew) {
-          draft.discovered = [...draft.discovered, output].sort((a, b) => a.localeCompare(b));
+          draft.discovered = [output, ...draft.discovered];
         }
 
         draft.mixes += 1;
