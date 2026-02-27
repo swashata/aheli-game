@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router";
 import GamePage from "@/pages/GamePage";
 import HomePage from "@/pages/HomePage";
+
 export function App() {
   return (
     <BrowserRouter>

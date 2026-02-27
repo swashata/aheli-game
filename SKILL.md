@@ -8,6 +8,7 @@ description: Build and iterate fun browser-based mini-games in this repository u
 Follow these constraints on every task:
 
 - Keep the app as a SPA; route in-client only.
+- Use `react-router` (React Router 7 declarative mode) for browser routing primitives (`BrowserRouter`, `Routes`, `Route`, `Link`, `useNavigate`, `useParams`).
 - Use frontend-only state and browser APIs; do not add backend code, server routes, or database dependencies.
 - Use shadcn/ui components for UI structure, controls, overlays, dialogs, forms, and layout primitives.
 - Prioritize fast, playful game loops with clear feedback (score, timer, win/lose states, restart flow).
@@ -38,6 +39,15 @@ Follow these constraints on every task:
 - Keep copy concise and game-like.
 - Surface game state persistently (score, lives, timer, level).
 - Provide a one-click replay path from all terminal states.
+- Keep a shared game-page nav header with a consistent back action (`navigate(-1)` with fallback link to `/` when needed) and a visible `Aheli` brand lockup/logo linking to home.
+
+## React Router Conventions
+
+- Define routes in one place (`App.tsx`) under `BrowserRouter`.
+- Use dynamic game routes as `/games/:slug`.
+- Keep game metadata and component mappings in `src/games/index.ts` as the single source of truth.
+- Resolve page title and rendered component by `slug` from the shared games map, with a graceful unknown-game fallback UI.
+- Use `Link` for declarative navigation from lists/cards and `useNavigate` for button-driven back actions.
 
 ## Code Quality Rules
 
